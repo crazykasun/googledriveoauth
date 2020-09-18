@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <title>GDrive File Uploader</title>
+
+    <!--bootstrap css-->
+    <link rel="stylesheet" href="/lib/bootstrap/bootstrap.min.css">
+    <!-- font awesome css -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+
+    <!--Custom CSS-->
+    <style>
+        body {
+            padding-top: 30px;
+            background-image: url("https://wallpapercave.com/wp/wp3714916.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .fa-google {
+            background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="col-sm text-center">
+        <div class="row">
+            <div class="col-sm-4">
+
+            </div>
+            <div class="col-sm-4">
+                <img class="img-fluid"
+                     src="/images/Google-drive.png">
+            </div>
+        </div>
+    </div>
+    <div class="col-sm text-center">
+        <div class="row">
+            <div class="col-sm-2">
+
+            </div>
+            <div class="col-sm card" style="background-color: #F5F5F5">
+                <div class="card-body mt-4 mb-4">
+                    <h1><span class="fa fa-user"></span> Sign In</h1>
+
+                    <a href="<%= url %>" class="btn btn-lg btn mt-4 border border-dark"
+                       style="background-color: #ffffff" target="popup"><span class="fab fa-google"> &nbsp; </span>
+                        Sign in with Google</a>
+                </div>
+            </div>
+            <div class="col-sm-2">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

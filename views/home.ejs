@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GDrive File Uploader</title>
+
+    <!--bootstrap css-->
+    <link rel="stylesheet" href="/lib/bootstrap/bootstrap.min.css">
+
+    <!--font awesome css-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+
+    <!--Alertify-->
+    <!-- JavaScript -->
+    <script src="/lib/alertify/alertify.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/lib/alertify/alertify.min.css"/>
+    <link rel="stylesheet" href="/lib/alertify/default.min.css"/>
+
+    <!--Custom CSS-->
+    <style>
+        body {
+            padding-top: 40px;
+            background-image: url("/images/home_image.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="page-header row">
+        <input type="hidden" id="success" value="<%= success %>">
+        <div class="col-sm-2 text-left">
+            <img class="img-fluid"
+                 src="/images/Google-drive.png">
+        </div>
+        <div class="col-sm-6 text-right">
+
+        </div>
+        <div class="col-sm-4 text-right mt-3">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h3 class="text-secondary">Welcome</h3>
+                    <h5><%= name %></h5>
+                    <a href="/logout" class="btn btn-primary btn-sm">Logout</a>
+                </div>
+                <div class="col-sm-4 text-right">
+                    <img src="<%= photo %>" class="rounded-circle img-fluid" alt=""/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-6">
+        <div class="well">
+            <h3 class="text-danger">
+                <span class="fa fa-file"></span> &nbsp; Select Files to Upload
+            </h3>
+
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input
+                            type="file"
+                            class="form-control mt-4"
+                            name="file"
+                            required
+                            multiple
+                            maxlength="5"
+                            id="file"
+                            onchange="updateList()"
+                    />
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="spinner-border text-primary" id="spinner" role="status"></div>
+                        <div id="fileList">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-block btn-danger" onclick="addLoader()">
+                        Upload File
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-3">
+    </div>
+</div>
+</div>
+</body>
+
+<!--Custom JavaScript-->
+<script>
+    document.getElementById("spinner").style.visibility = "hidden";
+
+    const updateList = () => {
+        let input = document.getElementById('file');
+        let output = document.getElementById('fileList');
+        let children = "";
+        for (let i = 0; i < input.files.length; ++i) {
+            children += '<li class="text-left font-weight-bold">' +
+                '<div class="row">' +
+                '<div class="col-sm-7">' +
+                '<p>' + input.files.item(i).name + '</p>' +
+                '</div>' +
+                '<div class="col-sm-2">' +
+                '</div>' +
+                '<div class="col-sm-3">' +
+                '<p> Size: ' + (input.files.item(i).size / 1024).toFixed(1) + 'KB' + '</p>' +
+                '</div>' +
+                '</div>' +
+                '</li>';
+        }
+        output.innerHTML = '<ul>' + children + '</ul>';
+    }
+
+    const addLoader = () => {
+        document.getElementById("spinner").style.visibility = "visible";
+    }
+</script>
+<script>
+    if (document.getElementById('success').value === 'yes') {
+        alertify.success('Success message');
+    }
+</script>
+<script src="/lib/jquery.min.js"></script>
+<script src="/lib/bootstrap/bootstrap.min.js"></script>
+</html>
