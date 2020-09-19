@@ -35,11 +35,11 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Upload Files <span class="sr-only">(current)</span></a>
-                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/read">View Files</a>
+                    <a class="nav-link" href="/">Upload Files </a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/read">View Files </a>
                 </li>
             </ul>
             <div class="form-inline mt-1">
@@ -78,36 +78,13 @@
         <div class="col-sm-6">
             <div class="well">
                 <h3 class="text-danger">
-                    <span class="fa fa-file"></span> &nbsp; Select Files to Upload
+                    <span class="fa fa-file"></span> &nbsp; File List
                 </h3>
-
-                <form action="/upload" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <input
-                                type="file"
-                                class="form-control mt-4"
-                                name="file"
-                                required
-                                multiple
-                                maxlength="5"
-                                id="file"
-                                onchange="updateList()"
-                        />
+                <div class="card">
+                    <div class="card-body">
+                        <%- fileArr %>
                     </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="spinner-border text-primary" id="spinner" role="status"></div>
-                            <div id="fileList">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-block btn-danger" onclick="addLoader()">
-                            Upload File
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
         <div class="col-sm-3">
@@ -118,36 +95,8 @@
 
 <!--Custom JavaScript-->
 <script>
-    document.getElementById("spinner").style.visibility = "hidden";
-
-    const updateList = () => {
-        let input = document.getElementById('file');
-        let output = document.getElementById('fileList');
-        let children = "";
-        for (let i = 0; i < input.files.length; ++i) {
-            children += '<li class="text-left font-weight-bold">' +
-                '<div class="row">' +
-                '<div class="col-sm-7">' +
-                '<p>' + input.files.item(i).name + '</p>' +
-                '</div>' +
-                '<div class="col-sm-2">' +
-                '</div>' +
-                '<div class="col-sm-3">' +
-                '<p> Size: ' + (input.files.item(i).size / 1024).toFixed(1) + 'KB' + '</p>' +
-                '</div>' +
-                '</div>' +
-                '</li>';
-        }
-        output.innerHTML = '<ul>' + children + '</ul>';
-    }
-
-    const addLoader = () => {
-        document.getElementById("spinner").style.visibility = "visible";
-    }
-</script>
-<script>
     if (document.getElementById('success').value === 'yes') {
-        alertify.success('File Uploaded Successfully');
+        alertify.success('File Deleted Successfully');
     }
 </script>
 <script src="/lib/jquery.min.js"></script>
