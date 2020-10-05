@@ -6,7 +6,10 @@ const {google} = require('googleapis')  //import google api module
 const oAuth = require('./drive_credentials.json')   //import google oauth credentials
 
 //info that needed to access from google api which are profile info and drive info
-const apiScope = ['https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive.file']
+const apiScope = ['https://www.googleapis.com/auth/drive ' +
+'https://www.googleapis.com/auth/drive.metadata.readonly ' +
+'https://www.googleapis.com/auth/userinfo.profile ' +
+'https://www.googleapis.com/auth/drive.file']
 
 //store oauth credentials in variables
 const CLIENT_ID = oAuth.web.client_id
@@ -79,7 +82,7 @@ app.get('/google/callback', (req, res) => {
 //give location to save file and unique file name
 let fileStorage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, "./images");
+        callback(null, "./files/uploads");
     },
     filename: function (req, file, callback) {
         callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
@@ -147,7 +150,7 @@ app.get('/read', (req, res2) => {
             console.log('Files:');
             files.map((file) => {
                 getFiles += '<div class="row"><div class="col-sm-8"><li class="text-left">' + (file.name).substr(0, 40) + '</li></div>' +
-                    '<div class="col-sm-2"><form action="/downloadFile/' + file.id + '" method="post">' +
+                    '<div class="col-sm-2"><form action="/downloadFile/' + file.id + '/' + file.name + '" method="post">' +
                     '    <button class="btn btn-sm btn-primary" name="download">Download</button>' +
                     '</form></div>' +
                     '<div class="col-sm-2"><form action="/deleteFile/' + file.id + '" method="post">' +
@@ -162,23 +165,33 @@ app.get('/read', (req, res2) => {
     });
 })
 
-app.post('/downloadFile/:id', (req, res) => {
+app.post('/downloadFile/:id/:name', (req, res) => {
     let fileId = req.params.id;
+    let fileName = req.params.name;
+    let filePath = './files/downloads/' + fileName;
+    let dest = fs.createWriteStream(filePath);
     const drive = google.drive({version: 'v3', auth: oAuthClient});
     drive.files.get({
             fileId: fileId,
             alt: 'media'
-        }, {responseType: 'stream'},
-        function (err, response) {
-            response.data
-                .on('end', () => {
-                    console.log('Done');
-                })
-                .on('error', err => {
-                    console.log('Error', err);
-                })
-                .pipe(res);
+        }, {responseType: 'stream'}
+    ).then(response => {
+        response.data
+            .on('end', () => {
+                console.log('Done');
+            })
+            .on('error', err => {
+                console.log('Error', err);
+            })
+            .pipe(dest);
+        res.download(filePath, function(err) {
+            if (err) {
+                console.log('Error in Download')
+            } else {
+                fs.unlinkSync(filePath)
+            }
         })
+    })
 })
 
 app.post('/deleteFile/:id', (req, res) => {
