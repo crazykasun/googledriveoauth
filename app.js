@@ -138,16 +138,17 @@ app.post('/upload', (req, res) => {
     })
 })
 
+//list files in drive
 app.get('/read', (req, res2) => {
     let getFiles = ''
     const drive = google.drive({version: 'v3', auth: oAuthClient});
     drive.files.list({
-        pageSize: 10
+        pageSize: 10    //get maximum 10 files
     }, (err, res) => {
-        if (err) return console.log('The API returned an error: ' + err);
+        if (err) return console.log('The API returned an error: ' + err);   //if error print message
         const files = res.data.files;
         if (files.length) {
-            console.log('Files:');
+            //create html code segment using file names
             files.map((file) => {
                 getFiles += '<div class="row"><div class="col-sm-8"><li class="text-left">' + (file.name).substr(0, 40) + '</li></div>' +
                     '<div class="col-sm-2"><form action="/downloadFile/' + file.id + '/' + file.name + '" method="post">' +
@@ -160,17 +161,21 @@ app.get('/read', (req, res2) => {
         } else {
             console.log('No files found.');
         }
+        //render view page using created html code
         res2.render('view', {name: userName, photo: photo, success: isSuccess, fileArr: getFiles})
         isSuccess = 'no'
     });
 })
 
+//post request to download a file
 app.post('/downloadFile/:id/:name', (req, res) => {
+    //get file id and name
     let fileId = req.params.id;
     let fileName = req.params.name;
-    let filePath = './files/downloads/' + fileName;
+    let filePath = './files/downloads/' + fileName; //set file path to download
     let dest = fs.createWriteStream(filePath);
     const drive = google.drive({version: 'v3', auth: oAuthClient});
+    //get file from drive
     drive.files.get({
             fileId: fileId,
             alt: 'media'
@@ -183,20 +188,23 @@ app.post('/downloadFile/:id/:name', (req, res) => {
             .on('error', err => {
                 console.log('Error', err);
             })
-            .pipe(dest);
+            .pipe(dest);    //download file to the server
+        //download retrieved file using browser
         res.download(filePath, function(err) {
             if (err) {
                 console.log('Error in Download')
             } else {
-                fs.unlinkSync(filePath)
+                fs.unlinkSync(filePath) //delete file from server side
             }
         })
     })
 })
 
+//post request to delete file
 app.post('/deleteFile/:id', (req, res) => {
     let fileId = req.params.id;
     const drive = google.drive({version: 'v3', auth: oAuthClient});
+    //delete file from drive
     drive.files.delete({
         fileId: fileId
     }).then((response) => {
