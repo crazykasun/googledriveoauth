@@ -1,6 +1,6 @@
 # GDrive App
 
-#### Upload, View, Download and Delete files in Google drive using OAuth 2.0 Authorization
+### Upload, View, Download and Delete files in Google drive using OAuth 2.0 Authorization
 
 ##### Technologies used
 1. Node JS
